@@ -9,7 +9,7 @@ Experimental Physics • Particle Detection • Fusion Diagnostics
 ### Navigation
 
 * [Research](research)
-* [Publications](publications)
+* [Publications](publication)
 * [Resume](resume.pdf)
 * [Contact](contact)
 
@@ -44,7 +44,7 @@ Current work focuses on machine-learning approaches for distinguishing WIMP and 
 * JINST 21 (2026) C04019
 * Conference Posters at MIT Foundations of Physics and HTPD 2026
 
-See the complete list → [Publications](publications)
+See the complete list → [Publications](publication)
 
 ---
 
