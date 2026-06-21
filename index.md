@@ -33,9 +33,6 @@ First-author publication in JINST on a novel liquid xenon time projection chambe
 
 Development of microwave diagnostic instrumentation including a 170 GHz waveguide notch filter.
 
-### Dark Matter Detection
-
-Current work focuses on machine-learning approaches for distinguishing WIMP and neutrino events in liquid xenon detectors.
 
 ---
 
