@@ -28,4 +28,4 @@ I am a high school student interested in experimental physics, particle detectio
 
 ## Contact
 
-Email: your-email-here
+Email: baronjk2027@gmail.com
