@@ -3,7 +3,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Presentations - Baron Li</title>
+<title>Baron Li</title>
 
 <style>
 body {
@@ -15,7 +15,7 @@ body {
 }
 
 .sidebar {
-    width: 300px;
+    width: 260px;
     height: 100vh;
     position: fixed;
     background: #111111;
@@ -24,25 +24,12 @@ body {
     box-sizing: border-box;
 }
 
-.content {
-    margin-left: 300px;
-    padding: 50px;
-    max-width: 900px;
-}
-
-.profile-photo {
-    width: 100%;
-    border-radius: 12px;
-    margin-bottom: 15px;
-}
-
 .small {
     color: #aaaaaa;
 }
 
 a {
     color: #7cc7ff;
-    text-decoration: none;
 }
 
 a:hover {
@@ -52,6 +39,31 @@ a:hover {
 h1, h2, h3 {
     color: white;
 }
+
+.content {
+    margin-left: 260px;
+    padding: 50px;
+    max-width: 900px;
+}
+
+h1 {
+    margin-bottom: 5px;
+}
+
+h2 {
+    margin-top: 40px;
+}
+
+.nav a {
+    display: block;
+    margin: 12px 0;
+    text-decoration: none;
+}
+
+.profile {
+    margin-bottom: 30px;
+}
+
 </style>
 
 </head>
@@ -60,22 +72,29 @@ h1, h2, h3 {
 
 <div class="sidebar">
 
-```
-<img src="baron_sf.jpg" class="profile-photo">
 
-<h1>Baron Li</h1>
+<div class="profile">
 
-<div class="small">
-    Experimental Physics Researcher
+    <img src="baron_htpd.jpg"
+         width="180"
+         style="border-radius:12px; margin-bottom:15px;">
+
+    <h1>Baron Li</h1>
+
+    <div class="small">
+        Physics Researcher
+    </div>
+
 </div>
 
-<br>
+<div class="nav">
+    <a href="#about">About</a>
+    <a href="#research">Research</a>
+    <a href="publications.html">Publications</a>
+    <a href="resume.pdf">Resume</a>
+    <a href="#contact">Contact</a>
+</div>
 
-<a href="index.html">About</a>
-<a href="publications.html">Publications</a>
-<a href="presentations.html">Presentations</a>
-<a href="resume.pdf">Resume</a>
-```
 
 </div>
 
