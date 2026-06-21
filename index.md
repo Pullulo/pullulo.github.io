@@ -9,7 +9,7 @@ Experimental Physics • Particle Detection • Fusion Diagnostics
 ### Navigation
 
 * [Research](research)
-* [Publications](publication)
+* [Publication](publication)
 * [Resume](resume.pdf)
 * [Contact](contact)
 
