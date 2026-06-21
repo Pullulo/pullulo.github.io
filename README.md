@@ -4,8 +4,6 @@
 
 # Baron Li
 
-## Physics Researcher
-
-Experimental Physics • Particle Detection • Fusion Diagnostics
+## Physics Researcher Come here
 
 
