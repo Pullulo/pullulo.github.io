@@ -1,8 +1,3 @@
----
-
-layout: default
-title: Baron Li
----------------
 
 # Baron Li
 
