@@ -1,0 +1,24 @@
+/* Design tokens — single source of truth (CLAUDE.md §3) */
+:root {
+  /* Palette */
+  --p5-red: #e60012; /* primary */
+  --p5-red-deep: #b3000e;
+  --p5-black: #0a0a0a;
+  --p5-ink: #000000;
+  --p5-white: #f2f2f2;
+  --p5-cyan: #1cfeff; /* eyecatch accent only, mix-blend */
+
+  /* Geometry / motion */
+  --skew: -12deg; /* default shear for panels/cards */
+  --ease-slam: cubic-bezier(0.7, 0, 0.3, 1);
+  --dur-nav: 0.6s;
+
+  /* Type */
+  --font-display: "Anton", Impact, system-ui, sans-serif;
+  --font-body: "Oswald", "Archivo", system-ui, sans-serif;
+
+  /* Halftone texture knobs */
+  --halftone-size: 6px;
+  --halftone-dot: 1px;
+  --halftone-opacity: 0.06;
+}

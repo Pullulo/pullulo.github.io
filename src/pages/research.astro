@@ -1,0 +1,62 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import SectionHeading from "../components/SectionHeading.astro";
+import Card from "../components/Card.astro";
+
+// Placeholder research entries — fill in real detail later.
+const projects = [
+  {
+    eyebrow: "Medical Imaging · Detector R&D",
+    title: "Liquid Xenon PET Detector",
+    body: "Novel liquid xenon time projection chamber concept for positron emission tomography. Goals, geometry, and reconstruction approach go here.",
+  },
+  {
+    eyebrow: "Fusion · Millimeter-Wave Diagnostics",
+    title: "170 GHz Waveguide Notch Filter",
+    body: "Microwave diagnostic components for fusion plasma experiments. Design, simulation, and bench-test results go here.",
+  },
+  {
+    eyebrow: "Instrumentation",
+    title: "Particle Physics Instrumentation",
+    body: "Supporting instrumentation work — readout, calibration, and characterization. Summary goes here.",
+  },
+];
+---
+
+<BaseLayout title="Research — Baron Li">
+  <article class="page">
+    <SectionHeading kicker="Work" title="RESEARCH" />
+    <p class="lede">
+      Experimental physics across particle detection, fusion diagnostics, and instrumentation.
+      Placeholder entries below — ready to fill in.
+    </p>
+
+    <div class="stack">
+      {
+        projects.map((p) => (
+          <Card variant="accent" eyebrow={p.eyebrow} title={p.title}>
+            <p>{p.body}</p>
+          </Card>
+        ))
+      }
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .page {
+    max-width: 75ch;
+  }
+
+  .lede {
+    margin: 0 0 2rem;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    opacity: 0.9;
+  }
+
+  .stack {
+    display: grid;
+    gap: 1.25rem;
+  }
+</style>

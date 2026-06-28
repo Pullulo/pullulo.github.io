@@ -1,0 +1,98 @@
+/* Global base styles. Fonts are imported in BaseLayout via Fontsource. */
+@import "./tokens.css";
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--p5-black);
+  color: var(--p5-white);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  /* long unbreakable tokens (DOIs, URLs, emails) must not blow out narrow layouts */
+  overflow-wrap: anywhere;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  font-weight: 400; /* Anton ships a single heavy weight */
+  letter-spacing: 0.01em;
+  line-height: 0.95;
+  margin: 0 0 0.4em;
+}
+
+a {
+  color: var(--p5-red);
+  text-decoration: none;
+}
+
+a:hover,
+a:focus-visible {
+  color: var(--p5-white);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Reusable halftone / ben-day dot texture layer.
+   Pure CSS — no image files (CLAUDE.md §3). Apply to a positioned element. */
+.halftone {
+  position: relative;
+}
+
+.halftone::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image: radial-gradient(
+    var(--p5-ink) var(--halftone-dot),
+    transparent calc(var(--halftone-dot) + 0.5px)
+  );
+  background-size: var(--halftone-size) var(--halftone-size);
+  opacity: var(--halftone-opacity);
+}
+
+/* Accessibility: visible-on-focus skip link (used from Phase 1 on). */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 1000;
+  background: var(--p5-red);
+  color: var(--p5-white);
+  padding: 0.6em 1em;
+  font-family: var(--font-display);
+}
+
+.skip-link:focus {
+  left: 0;
+}
+
+/* Reduced motion: dramatic transitions degrade to calm crossfades (Phase 4). */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation-duration: 150ms !important;
+  }
+}

@@ -1,0 +1,85 @@
+---
+/**
+ * Angular content card (CLAUDE.md §3 — nothing is a plain rectangle).
+ * Uses clip-path for a jagged corner; inner content stays upright.
+ * In Phase 3 these are the staggerCards() targets (data-card).
+ */
+interface Props {
+  title?: string;
+  eyebrow?: string;
+  /** Visual emphasis variant. */
+  variant?: "default" | "accent";
+  href?: string;
+}
+const { title, eyebrow, variant = "default", href } = Astro.props;
+const Tag = href ? "a" : "article";
+---
+
+<Tag class:list={["card", variant]} href={href} data-card>
+  <span class="corner" aria-hidden="true"></span>
+  {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+  {title && <h3 class="title">{title}</h3>}
+  <div class="body"><slot /></div>
+</Tag>
+
+<style>
+  .card {
+    position: relative;
+    display: block;
+    background: var(--p5-black);
+    color: var(--p5-white);
+    border: 2px solid var(--p5-white);
+    padding: 1.4rem 1.5rem 1.5rem;
+    clip-path: polygon(0 0, 100% 0, 100% 88%, 96% 100%, 0 100%);
+    transition: transform 0.18s var(--ease-slam), border-color 0.18s;
+  }
+
+  .card.accent {
+    border-color: var(--p5-red);
+    background: linear-gradient(135deg, #1a0205 0%, var(--p5-black) 60%);
+  }
+
+  a.card:hover,
+  a.card:focus-visible {
+    transform: translate(-4px, -4px);
+    border-color: var(--p5-red);
+    outline: none;
+  }
+
+  .corner {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 0;
+    height: 0;
+    border-top: 22px solid var(--p5-red);
+    border-left: 22px solid transparent;
+  }
+
+  .eyebrow {
+    margin: 0 0 0.4rem;
+    font-size: 0.68rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--p5-red);
+  }
+
+  .title {
+    margin: 0 0 0.6rem;
+    font-size: clamp(1.3rem, 2.4vw, 1.7rem);
+    color: var(--p5-white);
+  }
+
+  .body {
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  .body :global(p) {
+    margin: 0 0 0.7rem;
+  }
+
+  .body :global(p:last-child) {
+    margin-bottom: 0;
+  }
+</style>

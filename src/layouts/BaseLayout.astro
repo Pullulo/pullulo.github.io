@@ -1,0 +1,115 @@
+---
+/**
+ * Base layout: loads fonts + global styles, enables Astro View Transitions via
+ * <ClientRouter />, and mounts a single global overlay element that the GSAP
+ * transitions (Phase 2+) draw into. Sidebar/identity arrives in Phase 1.
+ */
+import { ClientRouter } from "astro:transitions";
+import Sidebar from "../components/Sidebar.astro";
+
+// Self-hosted free fonts via Fontsource (CLAUDE.md §1 — no P5 font rips).
+import "@fontsource/anton";
+import "@fontsource/oswald/300.css";
+import "@fontsource/oswald/400.css";
+import "@fontsource/oswald/600.css";
+
+import "../styles/global.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+const {
+  title = "Baron Li — Physics Researcher",
+  description = "Baron Li · Physics Researcher · particle detection, fusion diagnostics, particle physics.",
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={description} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <title>{title}</title>
+    <ClientRouter />
+  </head>
+  <body>
+    <!--
+      GSAP router: imported as a module, initialised once, document-level listeners
+      persist across Astro's body swaps because the <head> (and bundled JS) persists.
+    -->
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div class="layout">
+      <Sidebar />
+      <main id="main" tabindex="-1">
+        <slot />
+      </main>
+    </div>
+
+    <script>
+      import { initRouter } from "../lib/router";
+      initRouter();
+    </script>
+
+    <!-- Kept as a semantic mount point; slashWipe creates its own overlay on <html>. -->
+    <div id="transition-overlay" aria-hidden="true"></div>
+
+    <style>
+      /*
+       * Suppress the browser's native ::view-transition crossfade so the live DOM
+       * (and our GSAP panels on <html>) are visible throughout the swap.
+       * - Old screenshot hidden immediately → live DOM (+ panels) visible
+       * - New screenshot shown instantly after swap → no double-fade
+       */
+      ::view-transition-old(root) {
+        display: none;
+      }
+      ::view-transition-new(root) {
+        animation: none;
+      }
+
+      /*
+       * Reduced motion: restore Astro's default gentle crossfade.
+       * The GSAP router returns early for prefers-reduced-motion, so the
+       * native VT handles the transition with these restored animations.
+       */
+      @media (prefers-reduced-motion: reduce) {
+        ::view-transition-old(root) {
+          display: revert;
+          animation: var(--astro-forward-old, var(--astro-old, none));
+        }
+        ::view-transition-new(root) {
+          animation: var(--astro-forward-new, var(--astro-new, none));
+        }
+      }
+
+      .layout {
+        display: grid;
+        grid-template-columns: minmax(260px, 320px) 1fr;
+        min-height: 100vh;
+      }
+
+      #main {
+        min-width: 0; /* allow content to shrink inside the grid track */
+        padding: clamp(1.75rem, 5vw, 4.5rem);
+        outline: none;
+      }
+
+      @media (max-width: 800px) {
+        .layout {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      #transition-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        pointer-events: none;
+      }
+    </style>
+  </body>
+</html>

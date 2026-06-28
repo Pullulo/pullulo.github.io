@@ -1,0 +1,36 @@
+---
+/**
+ * Reusable ben-day / halftone dot overlay (CLAUDE.md §3).
+ * Pure CSS gradient — no image files. Drop inside any positioned container.
+ */
+interface Props {
+  /** Override dot spacing, e.g. "8px". */
+  size?: string;
+  /** Override layer opacity, 0–1. */
+  opacity?: number;
+}
+const { size, opacity } = Astro.props;
+const style = [
+  size ? `--halftone-size:${size}` : null,
+  opacity != null ? `--halftone-opacity:${opacity}` : null,
+]
+  .filter(Boolean)
+  .join(";");
+---
+
+<span class="halftone-layer" aria-hidden="true" style={style}></span>
+
+<style>
+  .halftone-layer {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background-image: radial-gradient(
+      var(--p5-ink) var(--halftone-dot),
+      transparent calc(var(--halftone-dot) + 0.5px)
+    );
+    background-size: var(--halftone-size) var(--halftone-size);
+    opacity: var(--halftone-opacity);
+  }
+</style>

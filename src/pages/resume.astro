@@ -1,0 +1,221 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import SectionHeading from "../components/SectionHeading.astro";
+
+// Clean, scannable resume layout (CLAUDE.md §4). Placeholder entries.
+const sections = [
+  {
+    label: "Research Experience",
+    items: [
+      {
+        head: "Liquid Xenon PET Detector — Detector R&D",
+        meta: "2024 – Present",
+        body: "Developed a novel liquid xenon TPC concept for medical imaging; first-author JINST publication.",
+      },
+      {
+        head: "Fusion Plasma Diagnostics — Millimeter-Wave Components",
+        meta: "2023 – 2024",
+        body: "Designed and bench-tested a 170 GHz waveguide notch filter for fusion plasma experiments.",
+      },
+    ],
+  },
+  {
+    label: "Publications",
+    items: [
+      {
+        head: "A New Concept of Liquid Xenon TPC for Medical Imaging",
+        meta: "JINST · Apr. 2026",
+        body: "Li, B., Ma, X., Ni, K. — C04019, DOI: 10.1088/1748-0221/21/04/C04019",
+      },
+    ],
+  },
+  {
+    label: "Skills & Interests",
+    items: [
+      {
+        head: "Technical",
+        meta: "",
+        body: "Detector physics · microwave/RF design · data analysis · scientific instrumentation.",
+      },
+      {
+        head: "Other",
+        meta: "",
+        body: "Philosophy of science — knowledge, explanation, and the foundations of physics.",
+      },
+    ],
+  },
+];
+---
+
+<BaseLayout title="Resume — Baron Li">
+  <article class="page">
+    <div class="head-row">
+      <SectionHeading kicker="Profile" title="RESUME" />
+      <a class="download" href="/resume.pdf" download>
+        <span class="dl-shape" aria-hidden="true"></span>
+        <span class="dl-label">Download PDF ↓</span>
+      </a>
+    </div>
+
+    <div class="contactline">
+      <span>Baron Li</span>
+      <span>·</span>
+      <span>Physics Researcher</span>
+      <span>·</span>
+      <a href="mailto:baronjk2027@gmail.com">baronjk2027@gmail.com</a>
+      <span>·</span>
+      <a href="https://baronli.org">baronli.org</a>
+    </div>
+
+    {
+      sections.map((s) => (
+        <section class="rsec" aria-labelledby={`rsec-${s.label.replace(/\s+/g, "-").toLowerCase()}`}>
+          <h2
+            class="block-label"
+            id={`rsec-${s.label.replace(/\s+/g, "-").toLowerCase()}`}
+          >
+            {s.label}
+          </h2>
+          <ul class="entries">
+            {s.items.map((it) => (
+              <li class="entry">
+                <div class="entry-head">
+                  <h3>{it.head}</h3>
+                  {it.meta && <span class="meta">{it.meta}</span>}
+                </div>
+                <p>{it.body}</p>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))
+    }
+  </article>
+</BaseLayout>
+
+<style>
+  .page {
+    max-width: 75ch;
+  }
+
+  .head-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .download {
+    position: relative;
+    display: inline-block;
+    font-family: var(--font-display);
+    font-size: 1rem;
+    letter-spacing: 0.05em;
+    color: var(--p5-white);
+    padding: 0.55em 1em;
+    transform: skewX(var(--skew));
+    border: 2px solid var(--p5-red);
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .dl-shape {
+    position: absolute;
+    inset: 0;
+    background: var(--p5-red);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 0.18s var(--ease-slam);
+    z-index: 0;
+  }
+
+  .dl-label {
+    position: relative;
+    z-index: 1;
+    display: inline-block;
+    transform: skewX(calc(-1 * var(--skew)));
+  }
+
+  .download:hover .dl-shape,
+  .download:focus-visible .dl-shape {
+    transform: scaleX(1);
+  }
+
+  .download:hover,
+  .download:focus-visible {
+    color: var(--p5-white);
+    outline: none;
+  }
+
+  .contactline {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    align-items: center;
+    font-size: 0.9rem;
+    opacity: 0.9;
+    margin: 0 0 2.25rem;
+  }
+
+  .block-label {
+    display: inline-block;
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--p5-white);
+    background: var(--p5-red);
+    transform: skewX(var(--skew));
+    padding: 0.15em 0.7em;
+    margin: 0 0 1rem;
+  }
+
+  .rsec + .rsec {
+    margin-top: 2.25rem;
+  }
+
+  .entries {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 1.1rem;
+  }
+
+  .entry {
+    border-left: 3px solid var(--p5-red);
+    padding-left: 1rem;
+  }
+
+  .entry-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .entry-head h3 {
+    margin: 0;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 1.05rem;
+    letter-spacing: normal;
+    line-height: 1.3;
+  }
+
+  .meta {
+    font-size: 0.8rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    opacity: 0.7;
+    white-space: nowrap;
+  }
+
+  .entry p {
+    margin: 0.35rem 0 0;
+    line-height: 1.6;
+    opacity: 0.9;
+  }
+</style>

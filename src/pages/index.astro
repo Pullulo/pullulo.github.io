@@ -1,0 +1,114 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import SectionHeading from "../components/SectionHeading.astro";
+import Card from "../components/Card.astro";
+import HalftoneLayer from "../components/HalftoneLayer.astro";
+---
+
+<BaseLayout title="Baron Li — Physics Researcher">
+  <article class="home">
+    <SectionHeading kicker="Profile" title="BARON LI" />
+
+    <section class="about halftone" aria-labelledby="about-h">
+      <HalftoneLayer opacity={0.05} />
+      <h2 id="about-h" class="block-label">About</h2>
+      <p>
+        High school student interested in experimental physics, particle detection, fusion
+        diagnostics, and the philosophy of science. Research spans liquid xenon detectors for
+        medical imaging, millimeter-wave diagnostics for fusion plasmas, and particle physics
+        instrumentation. Also reads philosophy and enjoys questions about science, knowledge, and
+        the nature of explanation.
+      </p>
+    </section>
+
+    <section class="highlights" aria-labelledby="hl-h">
+      <h2 id="hl-h" class="block-label">Research Highlights</h2>
+      <div class="grid">
+        <Card variant="accent" eyebrow="Medical Imaging" title="Liquid Xenon PET Detector">
+          <p>
+            Developed a novel liquid xenon time projection chamber concept for medical imaging.
+            First-author publication in JINST.
+          </p>
+        </Card>
+        <Card variant="accent" eyebrow="Plasma Physics" title="Fusion Plasma Diagnostics">
+          <p>
+            Designed and tested microwave diagnostic components including a 170&nbsp;GHz waveguide
+            notch filter for fusion plasma experiments.
+          </p>
+        </Card>
+      </div>
+    </section>
+
+    <section class="recent" aria-labelledby="recent-h">
+      <h2 id="recent-h" class="block-label">Recent Publications</h2>
+      <Card>
+        <p class="citation">
+          Li, B., Ma, X., Ni, K. <em>A New Concept of Liquid Xenon Time Projection Chamber for
+          Medical Imaging.</em> JINST, Vol.&nbsp;21, Apr.&nbsp;2026, C04019, DOI:
+          10.1088/1748-0221/21/04/C04019
+        </p>
+        <p class="more"><a href="/publications">View all publications →</a></p>
+      </Card>
+    </section>
+  </article>
+</BaseLayout>
+
+<style>
+  .home {
+    max-width: 70ch;
+  }
+
+  .block-label {
+    display: inline-block;
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--p5-white);
+    background: var(--p5-red);
+    transform: skewX(var(--skew));
+    padding: 0.15em 0.7em;
+    margin: 0 0 1rem;
+  }
+
+  section + section {
+    margin-top: 2.75rem;
+  }
+
+  .about {
+    position: relative;
+    padding: 1.5rem;
+    border: 2px solid var(--p5-white);
+    clip-path: polygon(0 0, 100% 0, 100% 92%, 97% 100%, 0 100%);
+  }
+
+  .about p {
+    position: relative;
+    z-index: 1;
+    margin: 0;
+    line-height: 1.7;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .citation {
+    margin: 0 0 0.8rem;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+  }
+
+  .citation em {
+    color: var(--p5-red);
+    font-style: italic;
+  }
+
+  .more {
+    margin: 0;
+    font-family: var(--font-display);
+    letter-spacing: 0.04em;
+  }
+</style>

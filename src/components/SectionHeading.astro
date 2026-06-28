@@ -1,0 +1,61 @@
+---
+/**
+ * Skewed section <h1> with a red slab behind it (CLAUDE.md §3).
+ * The slab is sheared; the text is counter-skewed so it stays readable.
+ * In Phase 3 this becomes the textSlam() target.
+ */
+interface Props {
+  kicker?: string;
+  /** Heading text. */
+  title: string;
+}
+const { kicker, title } = Astro.props;
+---
+
+<header class="section-heading">
+  {kicker && <p class="kicker">{kicker}</p>}
+  <h1 data-slam>
+    <span class="slab"><span class="text">{title}</span></span>
+  </h1>
+</header>
+
+<style>
+  .section-heading {
+    margin-bottom: 2rem;
+  }
+
+  .kicker {
+    display: inline-block;
+    font-family: var(--font-display);
+    font-size: 0.8rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--p5-white);
+    background: var(--p5-black);
+    border: 2px solid var(--p5-red);
+    transform: skewX(var(--skew));
+    padding: 0.25em 0.8em;
+    margin: 0 0 0.75rem;
+  }
+
+  h1 {
+    margin: 0;
+    line-height: 1;
+  }
+
+  .slab {
+    display: inline-block;
+    background: var(--p5-red);
+    transform: skewX(var(--skew));
+    padding: 0.08em 0.5em 0.14em;
+    box-shadow: 8px 8px 0 var(--p5-black);
+  }
+
+  .text {
+    display: inline-block;
+    transform: skewX(calc(-1 * var(--skew))); /* counter-skew for readability */
+    color: var(--p5-white);
+    font-size: clamp(2.4rem, 7vw, 5rem);
+    letter-spacing: 0.01em;
+  }
+</style>

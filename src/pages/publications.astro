@@ -1,0 +1,79 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import SectionHeading from "../components/SectionHeading.astro";
+import Card from "../components/Card.astro";
+
+// Paper cards (CLAUDE.md §4 — Publications is a list of paper cards).
+const papers = [
+  {
+    authors: "Li, B., Ma, X., Ni, K.",
+    title: "A New Concept of Liquid Xenon Time Projection Chamber for Medical Imaging",
+    venue: "JINST, Vol. 21, Apr. 2026, C04019",
+    doi: "10.1088/1748-0221/21/04/C04019",
+    tag: "First author",
+  },
+];
+---
+
+<BaseLayout title="Publications — Baron Li">
+  <article class="page">
+    <SectionHeading kicker="Output" title="PUBLICATIONS" />
+    <p class="lede">Peer-reviewed papers and preprints. More entries can be added to the list below.</p>
+
+    <ol class="papers">
+      {
+        papers.map((p) => (
+          <li>
+            <Card eyebrow={p.tag} title={p.title}>
+              <p class="authors">{p.authors}</p>
+              <p class="venue">{p.venue}</p>
+              <p class="doi">
+                DOI:{" "}
+                <a href={`https://doi.org/${p.doi}`} rel="noopener">
+                  {p.doi}
+                </a>
+              </p>
+            </Card>
+          </li>
+        ))
+      }
+    </ol>
+  </article>
+</BaseLayout>
+
+<style>
+  .page {
+    max-width: 75ch;
+  }
+
+  .lede {
+    margin: 0 0 2rem;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    opacity: 0.9;
+  }
+
+  .papers {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 1.25rem;
+    counter-reset: paper;
+  }
+
+  .authors {
+    margin: 0 0 0.3rem;
+    font-weight: 600;
+  }
+
+  .venue {
+    margin: 0 0 0.3rem;
+    opacity: 0.85;
+  }
+
+  .doi {
+    margin: 0;
+    font-size: 0.9rem;
+  }
+</style>

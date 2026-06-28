@@ -1,0 +1,305 @@
+---
+/**
+ * Persistent identity sidebar (CLAUDE.md §4). Sticky column on desktop,
+ * collapses to a top bar on mobile. Content is the real site content.
+ */
+const nav = [
+  { label: "Home", href: "/" },
+  { label: "Research", href: "/research" },
+  { label: "Publications", href: "/publications" },
+  { label: "Presentations", href: "/presentations" },
+  { label: "Resume", href: "/resume" },
+];
+
+// Normalise current path for active-state matching (strip trailing slash).
+const current = Astro.url.pathname.replace(/\/+$/, "") || "/";
+const isActive = (href: string) => (href === "/" ? current === "/" : current.startsWith(href));
+
+const tags = ["Particle Detection", "Fusion Diagnostics", "Particle Physics"];
+---
+
+<aside class="sidebar">
+  <div class="identity">
+    <img
+      class="photo"
+      src="/profile.jpg"
+      width="160"
+      height="200"
+      alt="Baron Li standing beside a research poster"
+    />
+    <div class="namecard">
+      <p class="name">BARON&nbsp;LI</p>
+      <p class="role">Physics Researcher</p>
+    </div>
+  </div>
+
+  <ul class="tags" aria-label="Focus areas">
+    {tags.map((t) => <li>{t}</li>)}
+  </ul>
+
+  <nav class="nav" aria-label="Primary">
+    <ul>
+      {
+        nav.map((item, i) => (
+          <li class:list={[{ active: isActive(item.href) }, i % 2 === 0 ? "odd" : "even"]}>
+            <a href={item.href} aria-current={isActive(item.href) ? "page" : undefined}>
+              <span class="nav-shape" aria-hidden="true" />
+              <span class="nav-label">{item.label}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+
+  <div class="contact">
+    <a href="mailto:baronjk2027@gmail.com">baronjk2027@gmail.com</a>
+    <a href="https://baronli.org">baronli.org</a>
+  </div>
+
+  <footer class="credit">© 2026 Baron Li</footer>
+</aside>
+
+<style>
+  @import "../styles/navTilt.css";
+
+  .sidebar {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    padding: 1.75rem 1.5rem;
+    background: var(--p5-black);
+    border-right: 3px solid var(--p5-red);
+    overflow-y: auto;
+  }
+
+  /* angled red wedge accent down the inner edge */
+  .sidebar::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: -3px;
+    width: 3px;
+    height: 100%;
+    background: var(--p5-red);
+    clip-path: polygon(0 0, 100% 6%, 100% 94%, 0 100%);
+  }
+
+  .identity {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+  }
+
+  .photo {
+    width: 100%;
+    max-width: 200px;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    border: 3px solid var(--p5-white);
+    transform: skewX(var(--skew));
+    background: var(--p5-red-deep);
+  }
+
+  .namecard .name {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    line-height: 0.9;
+    color: var(--p5-white);
+    background: var(--p5-red);
+    display: inline-block;
+    transform: skewX(var(--skew));
+    padding: 0.1em 0.5em;
+    margin: 0;
+  }
+
+  .namecard .role {
+    margin: 0.5rem 0 0;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    font-size: 0.72rem;
+    color: var(--p5-white);
+    opacity: 0.85;
+  }
+
+  .tags {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .tags li {
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.3em 0.6em;
+    border: 1.5px solid var(--p5-white);
+    transform: skewX(var(--skew));
+    color: var(--p5-white);
+  }
+
+  .nav {
+    margin-top: auto;
+  }
+
+  .nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .nav a {
+    position: relative;
+    display: block;
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    letter-spacing: 0.03em;
+    color: var(--p5-white);
+    padding: 0.15em 0.5em;
+    transform: skewX(var(--skew));
+    /* transform transition overridden by navTilt.css (springy bounce) */
+    transition: color 0.15s;
+  }
+
+  .nav .nav-label {
+    position: relative;
+    z-index: 1;
+    display: inline-block;
+  }
+
+  /* skewed shape-wrapper that flicks in behind on hover (navTilt comes in Phase 3) */
+  .nav .nav-shape {
+    position: absolute;
+    inset: 0;
+    background: var(--p5-red);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 0.18s var(--ease-slam);
+    z-index: 0;
+  }
+
+  .nav a:hover .nav-shape,
+  .nav a:focus-visible .nav-shape,
+  .nav li.active a .nav-shape {
+    transform: scaleX(1);
+  }
+
+  .nav a:hover,
+  .nav a:focus-visible,
+  .nav li.active a {
+    color: var(--p5-white);
+  }
+
+  .nav li.active a {
+    outline: none;
+  }
+
+  .contact {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    font-size: 0.78rem;
+    word-break: break-word;
+  }
+
+  .contact a {
+    color: var(--p5-white);
+    opacity: 0.8;
+  }
+
+  .contact a:hover,
+  .contact a:focus-visible {
+    color: var(--p5-red);
+    opacity: 1;
+  }
+
+  .credit {
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    opacity: 0.5;
+  }
+
+  /* ---- Mobile: sidebar becomes a top bar ---- */
+  @media (max-width: 800px) {
+    .sidebar {
+      position: static;
+      height: auto;
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.75rem 1rem;
+      border-right: none;
+      border-bottom: 3px solid var(--p5-red);
+      padding: 1rem 1.1rem;
+    }
+
+    .sidebar::after {
+      display: none;
+    }
+
+    .identity {
+      flex-direction: row;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .photo {
+      width: 56px;
+      height: 70px;
+      max-width: none;
+    }
+
+    .namecard .name {
+      font-size: 1.5rem;
+    }
+
+    .namecard .role {
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+    }
+
+    .tags {
+      width: 100%;
+      order: 3;
+    }
+
+    .nav {
+      margin-top: 0;
+      width: 100%;
+      order: 4;
+    }
+
+    .nav ul {
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .nav a {
+      font-size: 1.05rem;
+      padding: 0.1em 0.45em;
+    }
+
+    .contact {
+      order: 5;
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 0.25rem 1rem;
+      width: 100%;
+    }
+
+    .credit {
+      order: 6;
+    }
+  }
+</style>

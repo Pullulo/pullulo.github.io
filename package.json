@@ -1,0 +1,20 @@
+{
+  "name": "baronli-org",
+  "type": "module",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@fontsource/anton": "^5.1.0",
+    "@fontsource/archivo": "^5.1.0",
+    "@fontsource/oswald": "^5.1.0",
+    "astro": "^5.1.0",
+    "gsap": "^3.12.5"
+  }
+}

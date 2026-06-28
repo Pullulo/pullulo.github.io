@@ -1,0 +1,55 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import SectionHeading from "../components/SectionHeading.astro";
+import Card from "../components/Card.astro";
+
+// Placeholder talks / posters — fill in real detail later.
+const talks = [
+  {
+    eyebrow: "Poster",
+    title: "Liquid Xenon TPC for Medical Imaging",
+    body: "Venue and date go here. One-line description of the poster.",
+  },
+  {
+    eyebrow: "Talk",
+    title: "Millimeter-Wave Diagnostics for Fusion Plasmas",
+    body: "Venue and date go here. One-line description of the talk.",
+  },
+];
+---
+
+<BaseLayout title="Presentations — Baron Li">
+  <article class="page">
+    <SectionHeading kicker="Talks" title="PRESENTATIONS" />
+    <p class="lede">Talks and posters. Placeholder entries below — ready to fill in.</p>
+
+    <div class="grid">
+      {
+        talks.map((t) => (
+          <Card eyebrow={t.eyebrow} title={t.title}>
+            <p>{t.body}</p>
+          </Card>
+        ))
+      }
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .page {
+    max-width: 75ch;
+  }
+
+  .lede {
+    margin: 0 0 2rem;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    opacity: 0.9;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.25rem;
+  }
+</style>

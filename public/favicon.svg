@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <rect width="32" height="32" fill="#0A0A0A" />
+  <path d="M7 4 L25 7 L22 28 L4 25 Z" fill="#E60012" transform="skewX(-6)" />
+  <text x="16" y="22" font-family="Impact, sans-serif" font-size="18" fill="#F2F2F2" text-anchor="middle">B</text>
+</svg>
