@@ -6,8 +6,12 @@
  * resting place with ease-slam + a tiny overshoot.
  */
 import { gsap, SplitText } from "../gsap";
+import { shouldReduceMotion } from "./_shared";
 
 export function textSlam(): void {
+  // Reduced motion: leave headings in place, no slam (they're already visible).
+  if (shouldReduceMotion()) return;
+
   const targets = Array.from(document.querySelectorAll<HTMLElement>("[data-slam]"));
   if (!targets.length) return;
 

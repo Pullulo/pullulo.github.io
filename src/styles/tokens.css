@@ -1,17 +1,39 @@
 /* Design tokens — single source of truth (CLAUDE.md §3) */
 :root {
-  /* Palette */
-  --p5-red: #e60012; /* primary */
+  /* Core palette */
+  --p5-red: #e60012; /* primary — fills, slabs, large headings */
   --p5-red-deep: #b3000e;
+  /* Accessible red for SMALL text on the black background: #e60012 is only
+     4.1:1 on #0a0a0a (fails AA 4.5); this brighter red clears it (~4.9:1)
+     while keeping the same hue. Use for eyebrows, links, inline emphasis. */
+  --p5-red-text: #ff0014;
   --p5-black: #0a0a0a;
   --p5-ink: #000000;
   --p5-white: #f2f2f2;
   --p5-cyan: #1cfeff; /* eyecatch accent only, mix-blend */
 
+  /* Highlight accents (Persona pops of colour) */
+  --p5-yellow: #ffe800; /* primary highlight — CTAs, focus, emphasis */
+  --p5-green: #00e6a8; /* secondary highlight — tags, links-on-dark */
+
+  /* Greys — Persona panels are layered charcoals, not flat black */
+  --p5-gray-900: #121212;
+  --p5-gray-800: #1c1c1c;
+  --p5-gray-700: #262626;
+  --p5-gray-600: #3a3a3a;
+  --p5-gray-400: #8a8a8a;
+
   /* Geometry / motion */
   --skew: -12deg; /* default shear for panels/cards */
+  --skew-soft: -6deg;
   --ease-slam: cubic-bezier(0.7, 0, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
   --dur-nav: 0.6s;
+
+  /* Elevation — hard offset shadows (no blur), the comic-panel look */
+  --shadow-hard: 6px 6px 0 var(--p5-ink);
+  --shadow-hard-lg: 10px 10px 0 var(--p5-ink);
+  --shadow-red: 6px 6px 0 var(--p5-red);
 
   /* Type */
   --font-display: "Anton", Impact, system-ui, sans-serif;

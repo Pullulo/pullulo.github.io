@@ -6,6 +6,7 @@
  */
 import { ClientRouter } from "astro:transitions";
 import Sidebar from "../components/Sidebar.astro";
+import Backdrop from "../components/Backdrop.astro";
 
 // Self-hosted free fonts via Fontsource (CLAUDE.md §1 — no P5 font rips).
 import "@fontsource/anton";
@@ -42,6 +43,7 @@ const {
       persist across Astro's body swaps because the <head> (and bundled JS) persists.
     -->
     <a class="skip-link" href="#main">Skip to content</a>
+    <Backdrop />
     <div class="layout">
       <Sidebar />
       <main id="main" tabindex="-1">
@@ -54,16 +56,23 @@ const {
       initRouter();
     </script>
 
-    <!-- Kept as a semantic mount point; slashWipe creates its own overlay on <html>. -->
+    <!-- Each transition creates + removes its own overlay on <html>; this is unused but
+         kept as a stable, documented mount anchor. -->
     <div id="transition-overlay" aria-hidden="true"></div>
 
     <style>
       /*
        * Suppress the browser's native ::view-transition crossfade so the live DOM
-       * (and our GSAP panels on <html>) are visible throughout the swap.
-       * - Old screenshot hidden immediately → live DOM (+ panels) visible
+       * (and our GSAP overlay on <html>) is visible throughout the swap.
+       * - Old screenshot hidden immediately → live DOM (+ overlay) visible
        * - New screenshot shown instantly after swap → no double-fade
+       *
+       * This is unconditional: every navigation — including prefers-reduced-motion —
+       * is driven by a GSAP transition that masks the swap, and the reduced-motion
+       * path runs its own calm 150ms crossfade overlay (see _shared.ts).
        */
+      /* Suppress the native ::view-transition snapshots so our GSAP overlay on
+         <html> is what shows during the swap (each transition masks the swap). */
       ::view-transition-old(root) {
         display: none;
       }
@@ -71,24 +80,11 @@ const {
         animation: none;
       }
 
-      /*
-       * Reduced motion: restore Astro's default gentle crossfade.
-       * The GSAP router returns early for prefers-reduced-motion, so the
-       * native VT handles the transition with these restored animations.
-       */
-      @media (prefers-reduced-motion: reduce) {
-        ::view-transition-old(root) {
-          display: revert;
-          animation: var(--astro-forward-old, var(--astro-old, none));
-        }
-        ::view-transition-new(root) {
-          animation: var(--astro-forward-new, var(--astro-new, none));
-        }
-      }
-
       .layout {
+        position: relative;
+        z-index: 1; /* sit above the fixed Backdrop (z-index:0) */
         display: grid;
-        grid-template-columns: minmax(260px, 320px) 1fr;
+        grid-template-columns: minmax(280px, 340px) 1fr;
         min-height: 100vh;
       }
 

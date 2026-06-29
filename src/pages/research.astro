@@ -34,7 +34,7 @@ const projects = [
     <div class="stack">
       {
         projects.map((p) => (
-          <Card variant="accent" eyebrow={p.eyebrow} title={p.title}>
+          <Card variant="accent" eyebrow={p.eyebrow} title={p.title} headingLevel={2}>
             <p>{p.body}</p>
           </Card>
         ))

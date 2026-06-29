@@ -6,8 +6,12 @@
  * staggered 0.06s.
  */
 import { gsap } from "../gsap";
+import { shouldReduceMotion } from "./_shared";
 
 export function staggerCards(): void {
+  // Reduced motion: cards stay in place, fully visible — no entrance animation.
+  if (shouldReduceMotion()) return;
+
   const cards = Array.from(document.querySelectorAll<HTMLElement>("[data-card]"));
   if (!cards.length) return;
 

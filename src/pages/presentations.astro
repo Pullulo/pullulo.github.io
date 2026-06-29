@@ -26,7 +26,7 @@ const talks = [
     <div class="grid">
       {
         talks.map((t) => (
-          <Card eyebrow={t.eyebrow} title={t.title}>
+          <Card eyebrow={t.eyebrow} title={t.title} headingLevel={2}>
             <p>{t.body}</p>
           </Card>
         ))

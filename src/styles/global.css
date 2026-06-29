@@ -15,10 +15,11 @@ html {
 body {
   margin: 0;
   min-height: 100vh;
-  background: var(--p5-black);
+  /* Layered charcoal base; the chaotic red Backdrop sits behind on its own layer. */
+  background-color: #060606;
   color: var(--p5-white);
   font-family: var(--font-body);
-  font-size: 1rem;
+  font-size: 1.02rem;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
@@ -34,16 +35,18 @@ h3 {
   letter-spacing: 0.01em;
   line-height: 0.95;
   margin: 0 0 0.4em;
+  text-transform: uppercase;
 }
 
 a {
-  color: var(--p5-red);
+  color: var(--p5-red-text); /* AA-contrast red for small link text on dark */
   text-decoration: none;
+  transition: color 0.15s;
 }
 
 a:hover,
 a:focus-visible {
-  color: var(--p5-white);
+  color: var(--p5-yellow);
 }
 
 img {
@@ -52,8 +55,20 @@ img {
   display: block;
 }
 
-/* Reusable halftone / ben-day dot texture layer.
-   Pure CSS — no image files (CLAUDE.md §3). Apply to a positioned element. */
+::selection {
+  background: var(--p5-yellow);
+  color: var(--p5-black);
+}
+
+/* Persona-yellow focus ring everywhere (high-visibility, on-brand). */
+:focus-visible {
+  outline: 3px solid var(--p5-yellow);
+  outline-offset: 2px;
+}
+
+/* ---- Reusable Persona utilities ---- */
+
+/* Halftone / ben-day dot texture layer. Pure CSS (CLAUDE.md §3). */
 .halftone {
   position: relative;
 }
@@ -72,23 +87,48 @@ img {
   opacity: var(--halftone-opacity);
 }
 
-/* Accessibility: visible-on-focus skip link (used from Phase 1 on). */
+/* Angular charcoal content panel with a hard offset shadow + jagged corner. */
+.panel {
+  position: relative;
+  background: var(--p5-gray-900);
+  border: 2px solid var(--p5-white);
+  box-shadow: var(--shadow-hard);
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 18px), calc(100% - 18px) 100%, 0 100%);
+}
+
+/* Sheared red slab label (counter-skew the inner text for legibility). */
+.slab {
+  display: inline-block;
+  background: var(--p5-red);
+  color: var(--p5-white);
+  font-family: var(--font-display);
+  transform: skewX(var(--skew));
+  padding: 0.18em 0.7em;
+  box-shadow: var(--shadow-hard);
+}
+.slab > * {
+  display: inline-block;
+  transform: skewX(calc(-1 * var(--skew)));
+}
+
+/* Accessibility: visible-on-focus skip link. */
 .skip-link {
   position: absolute;
   left: -9999px;
   top: 0;
-  z-index: 1000;
-  background: var(--p5-red);
-  color: var(--p5-white);
+  z-index: 10000;
+  background: var(--p5-yellow);
+  color: var(--p5-black);
   padding: 0.6em 1em;
   font-family: var(--font-display);
+  letter-spacing: 0.05em;
 }
 
 .skip-link:focus {
   left: 0;
 }
 
-/* Reduced motion: dramatic transitions degrade to calm crossfades (Phase 4). */
+/* Reduced motion: native VT degrade to a quick crossfade (Phase 4). */
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-group(*),
   ::view-transition-old(*),

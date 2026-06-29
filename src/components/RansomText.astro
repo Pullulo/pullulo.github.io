@@ -1,0 +1,78 @@
+---
+/**
+ * RansomText — Persona-5 "calling card" ransom-note lettering. Each glyph sits
+ * in its own cut-out box with an alternating colour scheme, font, tilt and size,
+ * like letters clipped from magazines. Renders to static HTML (no hydration).
+ */
+interface Props {
+  text: string;
+  /** Base glyph size, any CSS length. */
+  size?: string;
+  class?: string;
+  /** Accessible label for the whole word (defaults to `text`). */
+  label?: string;
+}
+const { text, size = "clamp(2.4rem, 7vw, 5rem)", class: klass = "", label } = Astro.props;
+
+// Cut-out styles cycled across glyphs (the occasional yellow/cyan pop).
+const styles = [
+  { bg: "var(--p5-white)", fg: "var(--p5-black)", font: "var(--font-display)" },
+  { bg: "var(--p5-red)", fg: "var(--p5-white)", font: "var(--font-body)" },
+  { bg: "var(--p5-black)", fg: "var(--p5-white)", font: "var(--font-display)" },
+  { bg: "var(--p5-white)", fg: "var(--p5-red)", font: "var(--font-body)" },
+  { bg: "var(--p5-yellow)", fg: "var(--p5-black)", font: "var(--font-display)" },
+];
+
+const chars = [...text];
+// Deterministic per-index jitter so SSR output is stable and balanced.
+const jitter = (i: number, mod: number, off: number) => ((i * 53 + 17) % mod) - off;
+---
+
+<span class:list={["ransom", klass]} role="img" aria-label={label ?? text} style={`--ransom-size:${size}`}>
+  {
+    chars.map((ch, i) => {
+      if (ch === " ") return <span class="space" aria-hidden="true">&nbsp;</span>;
+      // Yellow pop only on a sparse subset; otherwise cycle the first four.
+      const idx = i % 7 === 3 ? 4 : i % 4;
+      const s = styles[idx];
+      const rot = jitter(i, 11, 5); // -5..5 deg
+      const dy = jitter(i, 7, 3); // -3..3 px
+      const scale = 1 + (jitter(i, 5, 2) * 0.03); // ~0.94..1.06
+      return (
+        <span
+          class="glyph"
+          aria-hidden="true"
+          style={`background:${s.bg};color:${s.fg};font-family:${s.font};transform:rotate(${rot}deg) translateY(${dy}px) scale(${scale})`}
+        >
+          {ch}
+        </span>
+      );
+    })
+  }
+</span>
+
+<style>
+  .ransom {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.08em 0.12em;
+    line-height: 1;
+  }
+
+  .glyph {
+    display: inline-block;
+    font-size: var(--ransom-size);
+    font-weight: 700;
+    line-height: 0.86;
+    padding: 0.04em 0.16em 0.1em;
+    border: 2px solid var(--p5-black);
+    box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.55);
+    text-transform: uppercase;
+  }
+
+  .space {
+    display: inline-block;
+    width: 0.3em;
+  }
+</style>

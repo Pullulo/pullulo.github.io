@@ -1,0 +1,53 @@
+---
+/**
+ * MaskEmblem — an original phantom-thief domino mask (white band, glowing eyes).
+ * Decorative caricature accent in the Persona spirit. Purely visual.
+ */
+interface Props {
+  /** Any CSS width. */
+  size?: string;
+  class?: string;
+  /** Eye glow colour. */
+  eye?: string;
+}
+const { size = "120px", class: klass = "", eye = "var(--p5-yellow)" } = Astro.props;
+---
+
+<svg
+  class:list={["mask-emblem", klass]}
+  viewBox="0 0 240 150"
+  width={size}
+  aria-hidden="true"
+  style={`--eye:${eye}`}
+>
+  <!-- head silhouette -->
+  <path d="M44,150 C44,98 82,72 120,72 C158,72 196,98 196,150 Z" fill="#0a0a0a" />
+  <!-- white domino mask band -->
+  <path
+    d="M26,64 C22,38 78,38 116,52 C154,38 218,38 214,64
+       C216,84 168,84 150,72 C132,62 108,62 90,72
+       C72,84 24,84 26,64 Z"
+    fill="#f2f2f2"
+    stroke="#0a0a0a"
+    stroke-width="3"
+  />
+  <!-- angular brows -->
+  <polygon points="52,50 104,58 100,66 56,60" fill="#0a0a0a" />
+  <polygon points="188,50 136,58 140,66 184,60" fill="#0a0a0a" />
+  <!-- glowing eyes -->
+  <polygon class="eye" points="64,62 96,58 92,74 66,74" />
+  <polygon class="eye" points="176,62 144,58 148,74 174,74" />
+  <circle cx="80" cy="67" r="4.5" fill="#0a0a0a" />
+  <circle cx="160" cy="67" r="4.5" fill="#0a0a0a" />
+</svg>
+
+<style>
+  .mask-emblem {
+    display: block;
+    height: auto;
+    filter: drop-shadow(4px 5px 0 rgba(0, 0, 0, 0.5));
+  }
+  .eye {
+    fill: var(--eye);
+  }
+</style>

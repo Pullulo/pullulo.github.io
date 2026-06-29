@@ -1,31 +1,35 @@
 /**
- * paperTear — torn-paper reveal (CLAUDE.md §5 #2).
+ * paperTear — tears the ACTUAL current page. A live clone of the page is laid
+ * over the top; the real DOM swaps to the new page beneath it; then a jagged
+ * rip opens from a point and tears OUTWARD through the clone (feTurbulence paper
+ * fibres), peeling the current page away to reveal the new one. No black cover.
+ * ~560ms.
  *
- * Two halves share a jagged complementary clip-path seam.
- * They slam together from off-screen top/bottom to cover the viewport,
- * the DOM swaps, then they burst apart revealing the new content.
- * An SVG feTurbulence+feDisplacementMap filter roughens the torn edge.
- * ~540ms total.
+ * We clone the page (rather than use the native View-Transition snapshot) because
+ * Astro disables the VT API whenever the OS requests reduced motion — this works
+ * regardless of that setting.
  */
 import { gsap } from "../gsap";
+import { createOverlay, crossfade, shouldReduceMotion, type SwapTransition } from "./_shared";
 
-// Tear-line control points [x%, y%], left → right.
-// The two complementary clip-paths share these exact points.
-const TEAR: ReadonlyArray<readonly [number, number]> = [
-  [0, 50],  [8, 48],  [16, 53], [24, 46], [32, 52],
-  [40, 49], [48, 54], [56, 47], [64, 51], [72, 50],
-  [80, 53], [88, 47], [100, 50],
-];
+const HOLE_N = 22;
+const UNIT: Array<{ ang: number; rf: number }> = Array.from({ length: HOLE_N }, (_, i) => {
+  const base = (i / HOLE_N) * Math.PI * 2;
+  const spike = i % 2 === 0 ? 1 : 0.62;
+  return { ang: base + (Math.random() - 0.5) * 0.18, rf: spike * (0.82 + Math.random() * 0.36) };
+});
+const OX = 46;
+const OY = 50;
 
-const topClip = (() => {
-  const rev = [...TEAR].reverse().map(([x, y]) => `${x}% ${y}%`).join(", ");
-  return `polygon(0% 0%, 100% 0%, ${rev})`;
-})();
-
-const botClip = (() => {
-  const fwd = TEAR.map(([x, y]) => `${x}% ${y}%`).join(", ");
-  return `polygon(${fwd}, 100% 100%, 0% 100%)`;
-})();
+function holeClip(r: number, rot: number): string {
+  const hole = UNIT.map(({ ang, rf }) => {
+    const a = ang + rot;
+    const x = OX + r * rf * Math.cos(a);
+    const y = OY + r * rf * Math.sin(a) * 1.18;
+    return `${x.toFixed(1)}% ${y.toFixed(1)}%`;
+  });
+  return `polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 0%, ${hole.join(", ")}, ${hole[0]})`;
+}
 
 function ensureFilter(): void {
   if (document.getElementById("paper-rough-filter-host")) return;
@@ -33,61 +37,57 @@ function ensureFilter(): void {
   svg.id = "paper-rough-filter-host";
   svg.style.cssText = "position:absolute;width:0;height:0;overflow:hidden;pointer-events:none";
   svg.innerHTML = `<defs>
-    <filter id="paper-rough" x="-4%" y="-4%" width="108%" height="108%">
-      <feTurbulence type="fractalNoise" baseFrequency="0.06" numOctaves="4" seed="9" result="noise"/>
-      <feDisplacementMap in="SourceGraphic" in2="noise" scale="9"
-        xChannelSelector="R" yChannelSelector="G"/>
+    <filter id="paper-rough" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.01 0.03" numOctaves="3" seed="11" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="9" xChannelSelector="R" yChannelSelector="G"/>
     </filter>
   </defs>`;
   document.documentElement.appendChild(svg);
 }
 
-function makePanel(clip: string): HTMLDivElement {
-  const el = document.createElement("div");
-  Object.assign(el.style, {
+export const paperTear: SwapTransition = async (swap) => {
+  if (shouldReduceMotion()) return crossfade(swap);
+
+  ensureFilter();
+  const overlay = createOverlay();
+
+  // The "sheet" = an opaque backing + a live clone of the current page.
+  const sheet = document.createElement("div");
+  Object.assign(sheet.style, {
     position: "absolute",
     inset: "0",
-    background: "var(--p5-black)",
-    clipPath: clip,
-    filter: "url(#paper-rough)",
-    willChange: "transform",
-  });
-  return el;
-}
-
-export async function paperTear(swap: () => void): Promise<void> {
-  ensureFilter();
-
-  const overlay = document.createElement("div");
-  Object.assign(overlay.style, {
-    position: "fixed",
-    inset: "0",
-    zIndex: "9999",
-    pointerEvents: "all",
     overflow: "hidden",
+    background: "linear-gradient(160deg, #0c0506 0%, #060606 55%, #0a0306 100%)",
+    clipPath: holeClip(0, 0),
+    filter: "url(#paper-rough)",
+    willChange: "clip-path",
   });
-  document.documentElement.appendChild(overlay);
 
-  const top = makePanel(topClip);
-  const bot = makePanel(botClip);
-  overlay.append(top, bot);
+  const layout = document.querySelector<HTMLElement>(".layout");
+  if (layout) {
+    const clone = layout.cloneNode(true) as HTMLElement;
+    // Strip ids/control hooks so the inert clone can't collide with the live DOM.
+    clone.querySelectorAll("[id]").forEach((n) => n.removeAttribute("id"));
+    clone.querySelectorAll("[data-motion-toggle]").forEach((n) => n.removeAttribute("data-motion-toggle"));
+    clone.style.transform = `translateY(${-window.scrollY}px)`;
+    sheet.appendChild(clone);
+  }
+  overlay.appendChild(sheet);
 
-  // Start off-screen (top half above viewport, bottom below)
-  gsap.set(top, { y: "-100%" });
-  gsap.set(bot, { y: "100%" });
+  swap(); // real DOM is now the new page, hidden behind the sheet
 
-  // Phase 1: slam together (fast power3.in)
-  await gsap.to([top, bot], { y: "0%", duration: 0.2, ease: "power3.in" });
+  // Rip a jagged hole from the point outward until the sheet is gone.
+  const st = { r: 0, rot: 0 };
+  await gsap.to(st, {
+    r: 98,
+    rot: 0.4,
+    duration: 0.46,
+    ease: "power2.in",
+    onUpdate: () => {
+      sheet.style.clipPath = holeClip(st.r, st.rot);
+    },
+  });
 
-  swap();
-
-  // Phase 2: tear apart with rotation (top-left, bottom-right)
-  await Promise.all([
-    gsap.to(top, { y: "-115%", x: "-6%", rotation: -6, duration: 0.32, ease: "power3.out" }),
-    gsap.to(bot, { y: "115%",  x:  "6%", rotation:  4, duration: 0.32, ease: "power3.out" }),
-  ]);
-
-  gsap.killTweensOf([top, bot]);
+  gsap.killTweensOf([sheet, st]);
   overlay.remove();
-  // Filter host is lightweight; leave it for reuse on future paperTear calls.
-}
+};
